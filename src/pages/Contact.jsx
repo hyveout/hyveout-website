@@ -1,52 +1,15 @@
 import BackButton from "../components/BackButton";
 import StaticBackground from "../components/StaticBackground";
-import instaImg from "../assets/instagram.webp";
-import discordImg from "../assets/discord.webp";
-import tiktokImg from "../assets/tiktoklogo.webp";
-import xImg from "../assets/x-logo.webp";
 import "../css/contact.css"
 import Footer from "../components/Footer";
-import useLoading from "../components/useLoading";
-import LoadingScreen from "../components/LoadingScreen";
-
 
 function Contact() {
-    const isLoading = useLoading(
-    [instaImg, discordImg],
-    1000);
-    
-    if (isLoading) return <LoadingScreen/>
-
     return (
         <div className="main-border">
             <StaticBackground/>
             <BackButton path="/home"/>
             <div className="contact-container">
-                <div className="text">
-                    <p>EMAIL:</p>
-                    <p>hyveoutstaff@gmail.com</p>
-                </div>
-
-                <div class="social-icons">
-                    <a href="https://www.instagram.com/hyveout/" target="_blank">
-                        <img src= {instaImg} alt="instagram image" loading="lazy"/>
-                    </a>
-
-                    <a href="https://discord.gg/YxQgw4aCaK" target="_blank">
-                        <img src={discordImg} alt="discord image" loading="lazy"/>
-                    </a>
-
-                    <a href="https://x.com/hyvewrld" target="_blank">
-                        <img src={xImg} alt="X image" loading="lazy"/>
-                    </a>
-
-                    <a href="https://www.tiktok.com/@hyveout" target="_blank">
-                        <img src={tiktokImg} alt="tik tok logo" loading = "lazy" />
-                    </a>
-                    
-
-                </div>
-
+                <a className="contact-email" href="mailto:hyveoutstaff@gmail.com">hyveoutstaff@gmail.com</a>
             </div>
             <Footer/>
         </div>

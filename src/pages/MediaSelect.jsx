@@ -14,6 +14,9 @@ function MediaSelect() {
                 <Link to={"/media"} className="select-link">
                     <h1 className="select-text">MUSIC VIDEOS</h1>
                 </Link>
+                <Link to={"/visualizers"} className="select-link">
+                    <h1 className="select-text">VISUALIZERS</h1>
+                </Link>
                 <Link to={"/graphics"} className="select-link">
                     <h1 className="select-text">GRAPHICS/PHOTOS</h1>
                 </Link>

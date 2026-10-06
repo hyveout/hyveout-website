@@ -13,6 +13,7 @@ const Shop = lazy(() => import('./pages/Shop'))
 const Media = lazy(() => import('./pages/Media'))
 const MediaSelect = lazy(() => import('./pages/MediaSelect'))
 const Graphics = lazy(() => import('./pages/Graphics'))
+const Visualizers = lazy(() => import('./pages/Visualizers'))
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path='/media' element={<Media/>} />
         <Route path='/mediaSelect' element={<MediaSelect/>} />
         <Route path="/graphics" element={<Graphics/>} />
+        <Route path='/visualizers' element={<Visualizers/>} />
         <Route path='/about' element={<About/>} />
         <Route path='/games' element={<Games/>} />
         <Route path='/contact' element={<Contact/>} />

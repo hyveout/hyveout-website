@@ -1,48 +1,27 @@
-
 .contact-container {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-45%, -55%);
-}
-
-/* Centered text */
-.text {
+    transform: translate(-50%, -50%);
+    width: 80%;
     text-align: center;
-    font-family: 'PressStart2P', sans-serif; /* Optional: Match the desired font */
-    font-size: 2vw; /* Adjust size as needed */
-    margin: 30px 0; /* Add spacing between lines */
-    color: #000; /* Adjust text color */
 }
 
-.social-icons {
-    display: flex;
-    flex-direction: row; /* Arrange icons in a row */
-    justify-content: center; /* Center the icons horizontally */
-    align-items: center; /* Align icons vertically in the middle */
-    gap: 2vw; /* Add spacing between icons */
-    margin-top: 20px; /* Space between text and icons */
+.contact-email {
+    font-family: 'PressStart2P', sans-serif;
+    font-size: 2vw;
+    color: #000;
+    text-decoration: none;
+    overflow-wrap: break-word;
 }
 
-.social-icons img {
-    width: 8vw; /* Set consistent width for all icons */
-    height: auto; /* Set consistent height for all icons */
-    object-fit: contain; /* Maintain aspect ratio */
-    transition: transform 0.2s; /* Add hover effect */
-}
-
-.social-icons img:hover {
-    transform: scale(1.1); /* Slightly enlarge on hover */
+.contact-email:hover {
+    color: transparent;
+    -webkit-text-stroke: 1px black;
 }
 
 @media (max-width: 700px) {
-    .text{
-        font-size: 0.80rem;
-        margin-right: 17px;
-    }
-    .social-icons img{
-        width: 13vw;
-        height: auto;
-        margin-right: 17px;
+    .contact-email {
+        font-size: 0.8rem;
     }
 }

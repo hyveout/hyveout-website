@@ -30,6 +30,11 @@ function Mind() {
                 </h1>
 
                 <h1 className="mind-artist">
+                    <a href="https://bleood.online/" target="_blank"
+                    className="mind-link">BLEOOD</a>
+                </h1>
+
+                <h1 className="mind-artist">
                     <a href="https://youtu.be/aV6qdmObWxA?list=RDaV6qdmObWxA" target="_blank" className="mind-link">MAXXANT</a>
                 </h1>
 
@@ -86,6 +91,11 @@ function Mind() {
                 <h1 className="mind-artist">
                     <a href="https://youtu.be/FyZEULIMtVk" target="_blank"
                     className="mind-link">NINEXTEEN</a>
+                </h1>
+
+                <h1 className="mind-artist">
+                    <a href="https://www.youtube.com/watch?v=Jfs5cw2lWEA&list=RDJfs5cw2lWEA&start_radio=1" target="_blank"
+                    className="mind-link">KARTA</a>
                 </h1>
 
 
