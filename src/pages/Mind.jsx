@@ -1,6 +1,8 @@
 import BackButton from "../components/BackButton";
 import StaticBackground from "../components/StaticBackground";
+import { Link } from "react-router-dom";
 import "../css/mind.css"
+import creativeDirection from "../data/creativeDirection";
 import Footer from "../components/Footer";
 import useLoading from "../components/useLoading";
 import LoadingScreen from "../components/LoadingScreen";
@@ -16,6 +18,16 @@ function Mind() {
             <StaticBackground/>
             <BackButton path="/home"/>
             <div className="mind-container">
+                <p className="mind-section">CREATIVE DIRECTION</p>
+
+                {creativeDirection.map((artist) => (
+                    <h1 key={artist.slug} className="mind-artist">
+                        <Link to={`/creative/${artist.slug}`} className="mind-link">{artist.name}</Link>
+                    </h1>
+                ))}
+
+                <p className="mind-section">COLLABORATED ARTISTS</p>
+
                 <h1 className="mind-artist">
                     <a href="https://youtu.be/OseKKumHfW4?list=RDEMCW94n7XJPaGO7gh9VGK99g" target="_blank" className="mind-link">SLAYR</a>
                 </h1>
@@ -75,7 +87,7 @@ function Mind() {
 
                 <h1 className="mind-artist">
                     <a href="https://youtu.be/sNIJ3bWSaFg" target="_blank"
-                    className="mind-link">OVERTONGIHT</a>
+                    className="mind-link">OVERTONIGHT</a>
                 </h1>
 
                 <h1 className="mind-artist">
@@ -96,6 +108,16 @@ function Mind() {
                 <h1 className="mind-artist">
                     <a href="https://www.youtube.com/watch?v=Jfs5cw2lWEA&list=RDJfs5cw2lWEA&start_radio=1" target="_blank"
                     className="mind-link">KARTA</a>
+                </h1>
+
+                <h1 className="mind-artist">
+                    <a href="https://youtu.be/L7UpdMaXLYs?list=RDL7UpdMaXLYs" target="_blank"
+                    className="mind-link">CONFETTI</a>
+                </h1>
+
+                <h1 className="mind-artist">
+                    <a href="https://www.youtube.com/watch?v=a2_p16fPiTM&list=RDa2_p16fPiTM&start_radio=1" target="_blank"
+                    className="mind-link">FAITHLUNA</a>
                 </h1>
 
 

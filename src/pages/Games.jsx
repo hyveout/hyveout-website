@@ -10,6 +10,7 @@ import ksuuviGame from "../games/ksuuvi.mp4";
 import konbiniGame from "../games/konbini108.mp4";
 import translateGame from "../games/translate.mp4";
 import ultrapinkGame from "../games/ultrapink.mp4";
+import bleoodGame from "../games/bleood.mp4";
 import "../css/games.css"
 import Footer from "../components/Footer";
 import useLoading from "../components/useLoading";
@@ -17,7 +18,7 @@ import LoadingScreen from "../components/LoadingScreen";
 
 function Games() {
     const isLoading = useLoading(
-        [ghostGameGif, fragmentGameGif, allureGif, pfyGame, bluedawnGame, ksuuviGame, konbiniGame, translateGame, ultrapinkGame],
+        [ghostGameGif, fragmentGameGif, allureGif, pfyGame, bluedawnGame, ksuuviGame, konbiniGame, translateGame, ultrapinkGame, bleoodGame],
         6000);
     
     if (isLoading) return <LoadingScreen/>
@@ -27,6 +28,13 @@ function Games() {
             <StaticBackground/>
             <BackButton path="/home" />
             <div className="game-container">
+                <GameCard
+                    title = "BLEOOD: OFFICIAL WEBSITE"
+                    image = {bleoodGame}
+                    alt = "bleood official website"
+                    path = "https://bleood.online/"
+                />
+
                 <GameCard
                     title = "KSUUVI: OFFICIAL WEBSITE"
                     image = {ksuuviGame}
@@ -41,18 +49,18 @@ function Games() {
                     path = "https://konbini.crewpass108.com/"
                 />
 
-                <GameCard
-                    title = "ONE OR EIGHT: TRANSLATE"
-                    image = {translateGame}
-                    alt = "one or eight translate game"
-                    path = "https://translate.crewpass108.com/"
-                />
-
                 <GameCard 
                     title="VAX: BLUE DAWN"
                     image = {bluedawnGame}
                     alt = "vax blue dawn"
                     path = "https://bluedawn.online/"
+                />
+
+                <GameCard
+                    title = "ONE OR EIGHT: TRANSLATE"
+                    image = {translateGame}
+                    alt = "one or eight translate game"
+                    path = "https://translate.crewpass108.com/"
                 />
 
                 <GameCard 

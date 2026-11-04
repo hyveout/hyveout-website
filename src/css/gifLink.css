@@ -93,3 +93,22 @@
 
 
 }
+/* Not available yet (e.g. Shop): greyed out, not clickable */
+.gif-disabled {
+    cursor: not-allowed;
+}
+
+.gif-disabled .gifs {
+    filter: grayscale(1);
+    opacity: 0.45;
+}
+
+.gif-disabled .gifs:hover {
+    transform: none;
+}
+
+.gif-disabled .caption {
+    color: #9a9a9a;
+    text-shadow: -2px 1px 0px rgba(0, 0, 0, 0.35);
+}
+

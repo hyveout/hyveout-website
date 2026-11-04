@@ -56,3 +56,26 @@
         font-size: 1rem;
     }
 }
+/* Group labels (Creative Direction / Collaborated Artists) */
+.mind-section {
+    margin: 6px 0 2px;
+    font-size: clamp(10px, 0.9vw, 13px);
+    letter-spacing: 1px;
+    text-align: center;
+    color: transparent;
+    -webkit-text-stroke: 1px black;
+}
+
+.mind-section:not(:first-child) {
+    margin-top: 22px;
+}
+
+@media (max-width: 700px) {
+    .mind-section {
+        font-size: 8px;
+    }
+
+    .mind-section:not(:first-child) {
+        margin-top: 14px;
+    }
+}
