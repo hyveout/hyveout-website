@@ -512,3 +512,15 @@ body[data-screen="section"] .emblem-wrap:active { scale: 1.02; }
 
 #glows .glow { transition: opacity .35s, filter .35s, left .35s cubic-bezier(.2,.9,.3,1.3), top .35s cubic-bezier(.2,.9,.3,1.3); }
 #glows .glow.hot { transition: opacity .35s, filter .35s; }
+
+/* ---- icon sizes by importance: mind > games ≈ media > about > contact ---- */
+.sat[data-k="mind"]    .orbit { width: clamp(124px, 15.5vw, 208px); }
+.sat[data-k="games"]   .orbit { width: clamp(112px, 13.8vw, 184px); }
+.sat[data-k="media"]   .orbit { width: clamp(116px, 14.4vw, 192px); }
+.sat[data-k="shop"]    .orbit { width: clamp(92px, 11vw, 148px); }
+.sat[data-k="about"]   .orbit { width: clamp(96px, 11.6vw, 156px); }
+.sat[data-k="contact"] .orbit { width: clamp(88px, 10.6vw, 142px); }
+@media (max-width: 720px) {
+  .sat[data-k="mind"] .orbit { width: 80px; } .sat[data-k="games"] .orbit { width: 70px; } .sat[data-k="media"] .orbit { width: 74px; }
+  .sat[data-k="shop"] .orbit { width: 58px; } .sat[data-k="about"] .orbit { width: 60px; } .sat[data-k="contact"] .orbit { width: 54px; }
+}

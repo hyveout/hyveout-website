@@ -317,12 +317,12 @@ const ROUTES = {
       // satellite positions: angle around the emblem + distance (as a fraction of the shorter screen side)
       let satZ = 5;
       const SATS = [
-        { k: 'media',   label: 'MEDIA',   a: 232, d: .31, go: () => go('media') },
+        { k: 'media',   label: 'MEDIA',   a: 52,  d: .31, go: () => go('media') },
         { k: 'mind',    label: 'MIND',    a: 180, d: .37, go: () => go('mind') },
         { k: 'about',   label: 'ABOUT',   a: 128, d: .31, go: () => go('about') },
         { k: 'games',   label: 'GAMES',   a: -52, d: .31, go: () => go('games') },
         { k: 'shop',    label: 'SHOP',    a: 0,   d: .37 },
-        { k: 'contact', label: 'CONTACT', a: 52,  d: .31, go: () => go('contact') },
+        { k: 'contact', label: 'CONTACT', a: 232, d: .31, go: () => go('contact') },
       ];
       const nodes = SATS.map((s, i) => {
         const a = el('a', 'sat'); a.dataset.k = s.k; if (s.go) { a.dataset.focus = '1'; a.addEventListener('click', e => { if (e.isTrusted) return; s.go(e); }); } // real clicks are handled on pointerup below; synthetic ones (keyboard Enter) go straight through
@@ -388,7 +388,7 @@ const ROUTES = {
           let x, y;
           if (phone) {
             // same ring on phones, just tighter: sides level with the emblem, two above, two below
-            const PA = { about: 118, contact: 62, mind: 180, shop: 0, media: 242, games: 298 }[s.k];
+            const PA = { about: 118, media: 62, mind: 180, shop: 0, contact: 242, games: 298 }[s.k];
             const side = PA === 180 || PA === 0;
             const D = side ? Math.min(W * .345, 150) : Math.min(H * .215, 185);
             const rad = PA * Math.PI / 180;
