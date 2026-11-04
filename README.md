@@ -1,12 +1,30 @@
-# React + Vite
+# HYVEOUT
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portfolio site for **Hyveout**, the creative identity of Sameer Alam: music videos, creative direction, websites, album rollouts and games for music artists.
 
-Currently, two official plugins are available:
+Live at **[hyveout.com](https://hyveout.com)**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## The design
 
-## Expanding the ESLint configuration
+A console-dashboard style homepage inspired by the Xbox 360 / Wii menus: the Hyveout emblem floats in the middle, each section orbits it, and selecting one flies you into that page. Retro CRT scanlines and a scrolling world map sit behind everything.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Media** – music videos (YouTube), visualizers, graphics & photos
+- **Mind** – creative direction case studies (Slayr, Vax, Aquasocks) and collaborated artists
+- **Games** – interactive websites and games built for artists
+- **About / Contact**
+
+Works with mouse, touch and keyboard (arrow keys + Enter, Esc to go back).
+
+## Structure
+
+```
+index.html        page shell
+css/style.css     all styling
+js/app.js         navigation, screens, players
+data/site.json    every piece of content (videos, artists, projects, copy)
+assets/           fonts, icons, images, game clips, videos
+```
+
+No build step: it's plain HTML, CSS and JavaScript. To change content, edit `data/site.json`.
+
+Run locally with any static server, e.g. `npx serve .`
