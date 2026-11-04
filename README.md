@@ -28,3 +28,4 @@ assets/           fonts, icons, images, game clips, videos
 No build step: it's plain HTML, CSS and JavaScript. To change content, edit `data/site.json`.
 
 Run locally with any static server, e.g. `npx serve .`
+
