@@ -45,7 +45,7 @@ function placeOrb(where) {
   const render = () => { emblem.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; };
   const tick = () => {
     if (dragging) return;
-    vy *= 0.965; vx *= 0.92; ry += vy; rx = Math.max(-40, Math.min(40, rx + vx)); rx += (0 - rx) * 0.05;
+    vy *= 0.965; vx *= 0.92; ry += vy; rx += vx; rx += (0 - rx) * 0.05;
     const home = Math.round(ry / 360) * 360;
     if (Math.abs(vy) < 0.12) ry += (home - ry) * 0.035;
     render();
@@ -63,7 +63,7 @@ function placeOrb(where) {
     if (!dragging) return;
     const dx = e.clientX - lastX, dy = e.clientY - lastY, now = performance.now(), dt = Math.max(1, now - lastT);
     ry += dx * .6; rx = Math.max(-40, Math.min(40, rx - dy * .3));
-    vy = Math.max(-40, Math.min(40, dx * .6 / dt * 16)); vx = Math.max(-12, Math.min(12, -dy * .3 / dt * 16));
+    vy = Math.max(-90, Math.min(90, dx * .6 / dt * 16)); vx = Math.max(-30, Math.min(30, -dy * .3 / dt * 16));
     lastX = e.clientX; lastY = e.clientY; lastT = now; render();
   });
   const up = e => {
@@ -85,10 +85,12 @@ function placeOrb(where) {
   // make sure the emblem always eases back to its home position
   const atHome = () => Math.abs(ry - Math.round(ry / 360) * 360) < .1 && Math.abs(rx) < .1;
   const nudge = () => { if (!dragging && !raf && !atHome()) raf = requestAnimationFrame(tick); };
-  setInterval(() => {
-    if (dragging && performance.now() - lastT > 2500) { vy = vx = 0; up({ clientX: lastX, clientY: lastY }); } // finger vanished: treat as release
-    nudge();
-  }, 1000);
+  const lost = () => { if (dragging) { vy = vx = 0; up({ clientX: lastX, clientY: lastY }); } };
+  window.addEventListener('pointerup', e => { if (dragging && e.target !== emblemWrap && !emblemWrap.contains(e.target)) up(e); });
+  window.addEventListener('pointercancel', lost);
+  window.addEventListener('blur', lost);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) lost(); });
+  setInterval(nudge, 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) nudge(); });
   window.addEventListener('pageshow', nudge);
   window.addEventListener('focus', nudge);
