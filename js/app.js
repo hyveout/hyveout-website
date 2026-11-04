@@ -22,6 +22,14 @@ const src = (ref) => {
 const fmtViews = n => n == null ? '' : new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(n) + ' views';
 const ago = iso => { if (!iso) return ''; const d = Math.floor((Date.now() - new Date(iso)) / 864e5); if (d < 30) return d + 'd ago'; const m = Math.floor(d / 30); return m < 12 ? m + 'mo ago' : Math.floor(d / 365) + 'y ago'; };
 
+// ---------- tiny pixel icons for menu rows (12x12 grid, drawn as rects) ----------
+const px = (rows, fill = 'currentColor') => `<svg viewBox="0 0 12 12" shape-rendering="crispEdges">${rows.flatMap((r, y) => [...r].map((c, x) => c === '#' ? `<rect x="${x}" y="${y}" width="1" height="1" fill="${fill}"/>` : '')).join('')}</svg>`;
+const ICONS = {
+  play:  px(['............','.##########.','#..........#','#..#.......#','#..##......#','#..###.....#','#..####....#','#..###.....#','#..##......#','#..#.......#','#..........#','.##########.']),
+  wave:  px(['............','............','......#.....','..#...#.....','..#...#..#..','..#.#.#..#..','#.#.#.#.##..','#.#.#.#.##.#','#.###.####.#','############','............','............']),
+  photo: px(['............','.##########.','.#........#.','.#..##....#.','.#..##....#.','.#........#.','.#.....#..#.','.#....###.#.','.#...######.','.#.########.','.##########.','............']),
+};
+
 // ---------- accent per section ----------
 const ACCENT = { media: '#9b5af3', mind: '#fd395e', about: '#0ea1ec', games: '#00c600', shop: '#9aa0ac', contact: '#f4cc2e', latest: '#e5323c' };
 
@@ -177,6 +185,9 @@ function panel(root, title, count, bodyBuild, cls = '') {
   const body = el('div', 'panel-body'); bodyBuild(body); p.appendChild(body);
   // custom scrollbar: always visible (phones hide native ones), draggable
   const bar = el('div', 'sbar'), thumb = document.createElement('i'); bar.appendChild(thumb); p.appendChild(bar);
+  const more = el('div', 'more', '▼ SCROLL'); p.appendChild(more);
+  const checkMore = () => more.classList.toggle('hide', body.scrollHeight - body.clientHeight - body.scrollTop < 8);
+  body.addEventListener('scroll', checkMore, { passive: true }); new ResizeObserver(checkMore).observe(body); new MutationObserver(checkMore).observe(body, { childList: true, subtree: true }); requestAnimationFrame(checkMore); setTimeout(checkMore, 600);
   const sync = () => {
     const H = body.clientHeight, S = body.scrollHeight;
     bar.classList.toggle('hide', S - H < 4);
@@ -212,8 +223,10 @@ function rowsList(body, items, onPick, { numbered = true } = {}) {
     if (!it.disabled) li.dataset.focus = '1';
     let html = '';
     if (it.thumb) html += `<img class="th${it.square ? ' sq' : ''}" src="${it.thumb}" alt="" loading="lazy">`;
+    if (it.icon) html += `<span class="ric">${it.icon}</span>`;
     html += `<span class="txt"><span class="t">${esc(it.title)}</span>${it.meta ? `<span class="m">${esc(it.meta)}</span>` : ''}</span>`;
     if (it.thumb) html += `<span class="th-spacer${it.square ? ' sq' : ''}"></span>`;
+    if (it.icon || it.chev) html += `<span class="chev">${it.ext ? '↗' : '&gt;'}</span>`;
     li.innerHTML = html;
     if (!it.disabled) li.addEventListener('click', () => onPick(it, i));
     ul.appendChild(li);
@@ -392,10 +405,10 @@ const ROUTES = {
   media() {
     show(root => {
       panel(root, 'MEDIA', '3 SECTIONS', body => rowsList(body, [
-        { title: 'MUSIC VIDEOS', k: 'mv' },
-        { title: 'VISUALIZERS', k: 'vis' },
-        { title: 'GRAPHICS / PHOTOS', k: 'gfx' },
-      ], it => go(it.k)), 'menu');
+        { title: 'MUSIC VIDEOS', k: 'mv', chev: true },
+        { title: 'VISUALIZERS', k: 'vis', chev: true },
+        { title: 'GRAPHICS / PHOTOS', k: 'gfx', chev: true },
+      ], it => go(it.k)), 'menu fit');
     }, { orb: 'corner', accent: 'media', crumb: '<b>MEDIA</b>' });
   },
   mv() {
@@ -428,9 +441,9 @@ const ROUTES = {
     show(root => {
       panel(root, 'MIND', '', body => rowsList(body, [
         { sep: 'CREATIVE DIRECTION' },
-        ...D.creative.map(c => ({ title: c.name, meta: c.project, c })),
+        ...D.creative.map(c => ({ title: c.name, meta: c.project, c, chev: true })),
         { sep: 'COLLABORATED ARTISTS' },
-        ...D.artists.map(([n, u]) => ({ title: n, url: u, ext: true })),
+        ...D.artists.map(([n, u]) => ({ title: n, url: u, ext: true, chev: true })),
       ], it => { if (it.c) go('cd', { slug: it.c.slug }); else window.open(it.url, '_blank', 'noopener'); }, { numbered: false }), 'menu');
     }, { orb: 'corner', accent: 'mind', crumb: '<b>MIND</b>' });
   },
@@ -520,7 +533,7 @@ const ROUTES = {
           if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
         }), { root: body, threshold: .15 });
         grid.querySelectorAll('video').forEach(v => io.observe(v));
-        const fit = () => { const c = grid.querySelector('.card'); if (!c || c.offsetHeight < 60) return; body.style.height = Math.round(c.offsetHeight * 1.32 + 32) + 'px'; };
+        const fit = () => { const c = grid.querySelector('.card'); if (!c || c.offsetHeight < 60) return; body.style.height = Math.round(c.offsetHeight * 1.45 + 56) + 'px'; };
         new ResizeObserver(fit).observe(grid.querySelector('.card'));
       }, 'wide');
     }, { orb: 'corner', accent: 'games', crumb: '<b>GAMES</b>' });
@@ -542,7 +555,7 @@ const ROUTES = {
     show(root => {
       panel(root, 'CONTACT', '', body => {
         const d = el('div', 'contact-only');
-        d.innerHTML = `<a class="btn primary" data-focus="1" href="mailto:${D.contact.email}">${D.contact.email}</a>`;
+        d.innerHTML = `<a class="email-link" data-focus="1" href="mailto:${D.contact.email}">${D.contact.email}</a>`;
         body.appendChild(d);
       });
     }, { orb: 'corner', accent: 'contact', crumb: '<b>CONTACT</b>' });
