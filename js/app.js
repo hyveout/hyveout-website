@@ -30,6 +30,8 @@ const ICONS = {
   photo: px(['............','.##########.','.#........#.','.#..##....#.','.#..##....#.','.#........#.','.#.....#..#.','.#....###.#.','.#...######.','.#.########.','.##########.','............']),
 };
 
+const SAT_POS = {}; // custom hub-icon positions (set by dragging), kept for the session
+
 // ---------- accent per section ----------
 const ACCENT = { media: '#9b5af3', mind: '#fd395e', about: '#0ea1ec', games: '#00c600', shop: '#9aa0ac', contact: '#f4cc2e', latest: '#e5323c' };
 
@@ -313,6 +315,7 @@ const ROUTES = {
       svg.setAttribute('class', 'sat-lines');
       field.appendChild(svg);
       // satellite positions: angle around the emblem + distance (as a fraction of the shorter screen side)
+      let satZ = 5;
       const SATS = [
         { k: 'media',   label: 'MEDIA',   a: 232, d: .31, go: () => go('media') },
         { k: 'mind',    label: 'MIND',    a: 180, d: .37, go: () => go('mind') },
@@ -322,7 +325,40 @@ const ROUTES = {
         { k: 'contact', label: 'CONTACT', a: 52,  d: .31, go: () => go('contact') },
       ];
       const nodes = SATS.map((s, i) => {
-        const a = el('a', 'sat'); a.dataset.k = s.k; if (s.go) { a.dataset.focus = '1'; a.addEventListener('click', s.go); }
+        const a = el('a', 'sat'); a.dataset.k = s.k; if (s.go) { a.dataset.focus = '1'; a.addEventListener('click', e => { if (e.isTrusted) return; s.go(e); }); } // real clicks are handled on pointerup below; synthetic ones (keyboard Enter) go straight through
+        // drag to move: pick up with a press, drop anywhere; springs back if released off-screen; a plain tap still opens
+        (() => {
+          let down = null, ox = 0, oy = 0, moved = false;
+          a.addEventListener('pointerdown', e => {
+            if (e.button !== 0) return;
+            down = [e.clientX, e.clientY]; ox = parseFloat(a.style.getPropertyValue('--x')); oy = parseFloat(a.style.getPropertyValue('--y')); moved = false;
+            a.setPointerCapture(e.pointerId);
+          });
+          a.addEventListener('pointermove', e => {
+            if (!down) return;
+            const dx = e.clientX - down[0], dy = e.clientY - down[1];
+            if (!moved && Math.hypot(dx, dy) < 6) return;
+            if (!moved) { moved = true; a.classList.add('dragging'); e.preventDefault(); a.style.zIndex = String(++satZ); } // picked-up icon comes to the front and stays there
+            a.style.setProperty('--x', (ox + dx) + 'px'); a.style.setProperty('--y', (oy + dy) + 'px');
+            const g = glows.querySelector(`[data-k="${s.k}"]`); if (g) { g.style.left = (ox + dx) + 'px'; g.style.top = (oy + dy) + 'px'; }
+          });
+          const drop = e => {
+            if (!down) return; down = null; a.classList.remove('dragging');
+            try { if (e.pointerId != null && a.hasPointerCapture(e.pointerId)) a.releasePointerCapture(e.pointerId); } catch {}
+            if (!moved) { if (s.go && e.type === 'pointerup') s.go(e); return; }
+            if (moved) {
+              // keep it on screen
+              const W = innerWidth, H = innerHeight, m = 70;
+              let x = parseFloat(a.style.getPropertyValue('--x')), y = parseFloat(a.style.getPropertyValue('--y'));
+              x = Math.max(m, Math.min(W - m, x)); y = Math.max(m + 20, Math.min(H - m - 40, y));
+              a.classList.add('settle'); a.style.setProperty('--x', x + 'px'); a.style.setProperty('--y', y + 'px');
+              const g = glows.querySelector(`[data-k="${s.k}"]`); if (g) { g.style.left = x + 'px'; g.style.top = y + 'px'; }
+              setTimeout(() => a.classList.remove('settle'), 400);
+              SAT_POS[s.k] = [x / W, y / H]; // remembered as a fraction of the screen so a resize (or coming back to the hub) keeps it in place
+            }
+          };
+          a.addEventListener('pointerup', drop); a.addEventListener('pointercancel', drop);
+        })();
         a.style.setProperty('--dur', (5.5 + (i % 3)) + 's'); a.style.setProperty('--delay', (-i * 1.3) + 's');
         a.innerHTML = `<span class="orbit"><span class="halo h1"></span><span class="halo h2"></span><span class="halo h3"></span><img class="icon" src="assets/icons/${s.k}.webp" alt=""></span><span class="label">${s.label}</span>`;
         field.appendChild(a);
@@ -362,6 +398,7 @@ const ROUTES = {
             const dist = orbR + m * s.d * .55;
             x = cx + Math.cos(rad) * dist * 1.35; y = cy - Math.sin(rad) * dist;
           }
+          if (SAT_POS[s.k]) { x = SAT_POS[s.k][0] * W; y = SAT_POS[s.k][1] * H; }
           a.style.setProperty('--x', x + 'px'); a.style.setProperty('--y', y + 'px');
           let g = glows.querySelector(`[data-k="${s.k}"]`);
           if (!g) { g = el('div', 'glow'); g.dataset.k = s.k; g.style.setProperty('--accent', ACCENT[s.k] || '#1e8cff'); g.style.setProperty('--delay', (i * .7) + 's'); glows.appendChild(g); }

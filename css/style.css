@@ -500,3 +500,15 @@ body[data-screen="section"] .emblem-wrap:active { scale: 1.02; }
 .email-link { font-size: clamp(13px,2vw,28px); text-decoration: none; color: #fff; -webkit-text-stroke: 1px #000; paint-order: stroke fill;
   text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; user-select: text; -webkit-user-select: text; transition: transform .15s; display: inline-block; }body[data-input="keys"] .email-link.focus { transform: translateY(-2px) scale(1.04); color: var(--accent); } @media (hover: hover) { .email-link:hover { transform: translateY(-2px) scale(1.04); color: var(--accent); } } @media (hover: none) { .email-link:active { transform: translateY(-2px) scale(1.04); color: var(--accent); } }
 @media (max-width: 720px) { .email-link { font-size: 13px; -webkit-text-stroke: .7px #000; } }
+
+/* ---- draggable hub icons ---- */
+.sat { touch-action: none; }
+.sat.dragging { transition: none; animation-play-state: paused; }
+.sat.dragging .orbit { transform: scale(1.12); box-shadow: inset 0 0 0 3px #fff, 10px 12px 0 #000, 0 0 40px var(--accent); }
+.sat.dragging .halo { animation-duration: 1.2s; }
+.sat.dragging .label { opacity: .6; }
+.sat.settle { transition: left .35s cubic-bezier(.2,.9,.3,1.3), top .35s cubic-bezier(.2,.9,.3,1.3); }
+.sat .orbit { transition: box-shadow .25s, border-color .25s, transform .2s; }
+
+#glows .glow { transition: opacity .35s, filter .35s, left .35s cubic-bezier(.2,.9,.3,1.3), top .35s cubic-bezier(.2,.9,.3,1.3); }
+#glows .glow.hot { transition: opacity .35s, filter .35s; }
