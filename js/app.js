@@ -538,6 +538,13 @@ promptB.addEventListener('click', goBack);
 promptA.addEventListener('click', activateFocus);
 // mouse hover also moves focus (so Enter matches what's under the cursor)
 document.addEventListener('touchstart', () => {}, { passive: true }); // lets :active fire on iOS
+// iOS ignores user-scalable=no; block pinch and double-tap zoom by hand
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+let lastTap = 0;
+document.addEventListener('touchend', e => { const t = Date.now(); if (t - lastTap < 300 && !e.target.closest('video, iframe')) e.preventDefault(); lastTap = t; }, { passive: false });
+document.addEventListener('contextmenu', e => { if (!e.target.closest('a')) e.preventDefault(); });
+document.addEventListener('dragstart', e => e.preventDefault());
 document.addEventListener('keydown', () => { document.body.dataset.input = 'keys'; });
 document.addEventListener('mousemove', () => { document.body.dataset.input = 'mouse'; });
 document.addEventListener('mouseover', e => { const f = e.target.closest('[data-focus]'); if (!f) return; const i = focusables().indexOf(f); if (i >= 0) setFocus(i, false); });
