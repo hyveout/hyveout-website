@@ -118,12 +118,14 @@ function show(build, { crumb, accent, orb, push = true, fly = true } = {}) {
   setAccent(accent || 'hub');
   crumbs.innerHTML = crumb || '';
   document.body.dataset.screen = orb === 'hub' ? 'hub' : 'section';
+  // the emblem glides to its new spot in one continuous move while the screens swap underneath
+  placeOrb(orb);
+  emblemWrap.classList.add('moving');
+  setTimeout(() => emblemWrap.classList.remove('moving'), 750);
   const finish = () => {
     if (old) old.remove();
     next.classList.add('on', 'enter');
-    placeOrb(orb);
-    emblemWrap.classList.remove('flythrough'); emblemWrap.classList.add('flyback');
-    setTimeout(() => { emblemWrap.classList.remove('flyback'); busy = false; }, 500);
+    setTimeout(() => { busy = false; }, 350);
     state.focus = 0; setFocus(0, false);
     promptB.classList.toggle('show', orb !== 'hub');
     promptA.classList.add('show');
@@ -132,8 +134,7 @@ function show(build, { crumb, accent, orb, push = true, fly = true } = {}) {
   };
   if (fly && old) {
     old.classList.add('leave');
-    emblemWrap.classList.add('flythrough');
-    setTimeout(finish, 420);
+    setTimeout(finish, 300);
   } else finish();
 }
 

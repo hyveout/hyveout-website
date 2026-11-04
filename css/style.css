@@ -120,7 +120,7 @@ body { text-shadow: 0.4px 0 rgba(255,0,80,.18), -0.4px 0 rgba(0,140,255,.18); }
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   z-index: 20;
-  transition: left .7s cubic-bezier(.2,.9,.3,1.05), top .7s cubic-bezier(.2,.9,.3,1.05), width .7s cubic-bezier(.2,.9,.3,1.05);
+  transition: left .75s cubic-bezier(.2,.9,.3,1.05), top .75s cubic-bezier(.2,.9,.3,1.05), width .75s cubic-bezier(.2,.9,.3,1.05);
   perspective: 900px;
   cursor: grab;
   touch-action: none; user-select: none;
@@ -140,10 +140,9 @@ body:not([data-screen="hub"]) .emblem-shadow { display: none; }
 .emblem-shadow { position: absolute; left: 50%; bottom: -14%; width: 66%; height: 9%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(ellipse, rgba(0,0,0,.45), transparent 70%); filter: blur(2px); animation: shadow 5s ease-in-out infinite; }
 @keyframes shadow { 0%,100% { transform: translateX(-50%) scale(1); opacity: .8; } 50% { transform: translateX(-50%) scale(.82); opacity: .45; } }
 /* the fly-through: emblem balloons toward the camera then snaps to its corner */
-.emblem-wrap.flythrough { animation: fly .55s cubic-bezier(.6,0,.9,.4) forwards; }
-@keyframes fly { 0% { transform: translate(-50%,-50%) scale(1); filter: blur(0); } 100% { transform: translate(-50%,-50%) scale(3.2); filter: blur(6px); opacity: 0; } }
-.emblem-wrap.flyback { animation: flyback .5s cubic-bezier(.2,.8,.3,1) forwards; }
-@keyframes flyback { 0% { transform: translate(-50%,-50%) scale(.3); opacity: 0; } 100% { transform: translate(-50%,-50%) scale(1); opacity: 1; } }
+/* a little squash-and-stretch while the emblem travels, so the move feels physical */
+.emblem-wrap.moving { animation: hop .75s cubic-bezier(.2,.9,.3,1.05); }
+@keyframes hop { 0% { transform: translate(-50%,-50%) scale(1); } 35% { transform: translate(-50%,-50%) scale(1.08); } 100% { transform: translate(-50%,-50%) scale(1); } }
 
 /* ================= screens ================= */
 .screen { position: fixed; inset: 0; display: none; z-index: 10; }
