@@ -315,6 +315,13 @@ const ROUTES = {
         field.appendChild(a);
         const under = document.createElementNS('http://www.w3.org/2000/svg', 'line'); under.setAttribute('class', 'under');
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const gid = 'lg-' + s.k;
+        if (!svg.querySelector('defs')) svg.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'defs'));
+        const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+        grad.setAttribute('id', gid); grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+        grad.innerHTML = `<stop offset="0" stop-color="${ACCENT[s.k] || '#1e8cff'}" stop-opacity="0"/><stop offset="0.55" stop-color="${ACCENT[s.k] || '#1e8cff'}" stop-opacity="1"/><stop offset="1" stop-color="${ACCENT[s.k] || '#1e8cff'}" stop-opacity="1"/>`;
+        svg.querySelector('defs').appendChild(grad);
+        line.setAttribute('stroke', `url(#${gid})`);
         const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         svg.append(under, line, dot);
         return { s, a, line, dot, under };
@@ -349,18 +356,35 @@ const ROUTES = {
           if (!a.dataset.glowBound) { a.dataset.glowBound = '1'; a.addEventListener('pointerenter', () => g.classList.add('hot')); a.addEventListener('pointerleave', () => g.classList.remove('hot')); }
           // line from the emblem's edge toward the satellite, stopping short of its ring
           const dx = x - cx, dy = y - cy, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
-          const x1 = cx + ux * (orbR * .96), y1 = cy + uy * (orbR * .96);
+          // reach well into the emblem (fading to nothing there), so the line visibly runs "into" the logo
+          const x1 = cx + ux * (orbR * .45), y1 = cy + uy * (orbR * .45);
           const ringR = (phone ? 66 : Math.min(180, Math.max(110, W * .135))) / 2 + 8;
           const x2 = x - ux * ringR, y2 = y - uy * ringR;
           const col = ACCENT[s.k] || '#1e8cff';
           for (const l of [line, under]) { l.setAttribute('x1', x1); l.setAttribute('y1', y1); l.setAttribute('x2', x2); l.setAttribute('y2', y2); }
-          line.setAttribute('stroke', col);
+          const gr = svg.querySelector('#lg-' + s.k); gr.setAttribute('x1', x1); gr.setAttribute('y1', y1); gr.setAttribute('x2', x2); gr.setAttribute('y2', y2);
           dot.setAttribute('cx', x1); dot.setAttribute('cy', y1); dot.setAttribute('fill', col); dot.setAttribute('stroke', '#000'); dot.setAttribute('stroke-width', '2'); dot.setAttribute('r', '5');
         });
       };
       layout();
       root._layout = layout;
       window.addEventListener('resize', layout);
+      // lines follow the icons as they float (and the emblem as it bobs), every frame
+      const track = () => {
+        if (!root.isConnected) return;
+        const er = emblemWrap.getBoundingClientRect();
+        const cx = er.left + er.width / 2, cy = er.top + er.height / 2, orbR = er.width / 2;
+        nodes.forEach(({ s, a, line, under }) => {
+          const o = a.querySelector('.orbit').getBoundingClientRect();
+          const x = o.left + o.width / 2, y = o.top + o.height / 2, ringR = o.width / 2 + 8;
+          const dx = x - cx, dy = y - cy, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+          const x1 = cx + ux * (orbR * .45), y1 = cy + uy * (orbR * .45), x2 = x - ux * ringR, y2 = y - uy * ringR;
+          for (const l of [line, under]) { l.setAttribute('x1', x1); l.setAttribute('y1', y1); l.setAttribute('x2', x2); l.setAttribute('y2', y2); }
+          const gr = svg.querySelector('#lg-' + s.k); gr.setAttribute('x1', x1); gr.setAttribute('y1', y1); gr.setAttribute('x2', x2); gr.setAttribute('y2', y2);
+        });
+        requestAnimationFrame(track);
+      };
+      requestAnimationFrame(track);
     }, { orb: 'hub', accent: 'hub', crumb: '', fly: state.stack.length > 1 });
   },
 
