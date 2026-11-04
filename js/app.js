@@ -474,9 +474,11 @@ const ROUTES = {
           grid.appendChild(a);
         });
         body.appendChild(grid);
+        // all clips get their source right away (already cached if the prefetch ran); visibility only decides play/pause
+        grid.querySelectorAll('video').forEach(v => { v.src = clipCache.get(v.dataset.src) || v.dataset.src; v.preload = 'auto'; });
         const io = new IntersectionObserver(es => es.forEach(e => {
           const v = e.target;
-          if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause();
+          if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
         }), { root: body, threshold: .15 });
         grid.querySelectorAll('video').forEach(v => io.observe(v));
         const fit = () => { const c = grid.querySelector('.card'); if (!c || c.offsetHeight < 60) return; body.style.height = Math.round(c.offsetHeight * 1.32 + 32) + 'px'; };
@@ -549,6 +551,18 @@ function start() {
   boot.classList.add('done');
   emblemWrap.style.opacity = '1';
   go('hub');
+  prefetchClips();
+}
+// Warm the browser cache with the game clips (1.6 MB total) while the hub is idle,
+// one at a time so it never competes with the page; the Games page then plays them instantly.
+const clipCache = new Map();
+async function prefetchClips() {
+  if (navigator.connection && navigator.connection.saveData) return;
+  for (const g of D.games) {
+    const url = src('clip:' + g.clip);
+    if (clipCache.has(url)) continue;
+    try { const r = await fetch(url, { priority: 'low' }); clipCache.set(url, URL.createObjectURL(await r.blob())); } catch { /* ignore */ }
+  }
 }
 $('#enterBtn').addEventListener('click', start);
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && !boot.classList.contains('done')) start(); });
